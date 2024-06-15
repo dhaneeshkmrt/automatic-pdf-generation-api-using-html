@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lab Results</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+
+    }
+
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      background-image: url('https://img.freepik.com/free-vector/paper-style-white-monochrome-background_23-2149001605.jpg?t=st=1718452551~exp=1718456151~hmac=8a619ff398001f7aa101de238f9a0c0e593851856bd15e07209abe8b1cf31045&w=1480'), url('https://d3unf4s5rp9dfh.cloudfront.net/ONEUI/color_system_img-01.png');
+      background-position: top left, bottom right;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .header img {
+      width: 100px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .content {
+      margin-top: 20px;
+    }
+
+    .content h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .results-table th,
+    .results-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    .results-table th {
+      background-color: #f2f2f2;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="https://my.clevelandclinic.org/-/scassets/images/org/health/articles/21704-heart-overview-outside"
+        alt="Lab Logo">
+      <h1>Lab Results</h1>
+      <p>Patient Name: John Doe</p>
+      <p>Date: June 15, 2024</p>
+    </div>
+    <div class="content">
+      <h2>Test Results</h2>
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Test</th>
+            <th>Result</th>
+            <th>Reference Range</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hemoglobin</td>
+            <td>14 g/dL</td>
+            <td>13.5 - 17.5 g/dL</td>
+          </tr>
+          <tr>
+            <td>Cholesterol</td>
+            <td>190 mg/dL</td>
+            <td>125 - 200 mg/dL</td>
+          </tr>
+          <tr>
+            <td>Blood Sugar</td>
+            <td>90 mg/dL</td>
+            <td>70 - 100 mg/dL</td>
+          </tr>
+        </tbody>
+      </table>
+      <h2>Notes</h2>
+      <p>The patient's lab results are within the normal range. Continue with the current lifestyle and medication.
+        Follow up in 6 months.</p>
+    </div>
+    <div class="footer">
+      <p>Lab Name | Address | Contact Information</p>
+    </div>
+  </div>
+</body>
+<script>
+  setTimeout(() => {
+
+    html2canvas(document.querySelector('.container')).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jspdf.jsPDF();
+      pdf.addImage(imgData, 'PNG', 0, 0);
+      pdf.save('pdf-download.pdf');
+    });
+  }, 3000)
+</script>
+
+</html>
