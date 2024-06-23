@@ -29,4 +29,4 @@ jobs:
           region: 'us-east-2'
           function_name: 'smart-report-pdf'
           handler: 'index.handler'
-          zip: 'dist.zip'
+          zip: '${{ github.workspace }}/dist.zipdist.zip'
