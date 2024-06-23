@@ -93,4 +93,7 @@ app.post('/generate-pdf', async (req, res) => {
 });
 
 const server = awsServerlessExpress.createServer(app);
-module.exports = { app, server };
+
+exports.handler = (event, context) => {
+  awsServerlessExpress.proxy(server, event, context);
+};
