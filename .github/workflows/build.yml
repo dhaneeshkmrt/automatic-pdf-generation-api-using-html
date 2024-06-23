@@ -1,32 +1,43 @@
 name: Deploy to AWS Lambda
+
 on:
   push:
     branches:
-      - main
+      - main  # Trigger the workflow on push to the main branch
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20'
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'  # Specify the Node.js version you need
 
-      - name: Install dependencies
-        run: npm install
+    - name: Install dependencies
+      run: npm install
 
-      - name: Build
-        run: npm run build
+    # - name: Build the project
+    #   run: npm run build
 
-      - name: Deploy to AWS Lambda
-        uses: appleboy/lambda-action@v0.2.0
-        with:
-          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: 'us-east-2'
-          function_name: 'smart-report-pdf'
-          handler: 'index.handler'
-          zip: '${{ github.workspace }}/dist.zip'
+    - name: Zip the build folder
+      run: zip -r build.zip . -x '*.git*'
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifact
+        path: build.zip
+
+    - name: Deploy to AWS Lambda
+      uses: appleboy/lambda-action@v0.1.4
+      with:
+        access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        region: 'us-east-2'  # Replace with your AWS region
+        function_name: 'smart-report-pdf'  # Replace with your Lambda function name
+        zip_file: 'build.zip'
