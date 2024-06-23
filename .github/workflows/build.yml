@@ -1,12 +1,10 @@
-name: Deploy to AWS Lambda
-
 on:
   push:
     branches:
       - main
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +14,37 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
 
+      # - name: Build application
+      #   run: npm run build
+
       - name: Archive production files
-        run: npm run build
+        run: zip -r dist.zip .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install awscli
 
       - name: Deploy to Lambda
-        uses: easingthemes/aws-lambda-deploy@v1
-        with:
-          access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: 'us-east-2'
-          function_name: 'smart-report-pdf'
-          handler_name: 'index.handler'
-          zip_file: './dist.zip'
+        run: |
+          aws lambda update-function-code \
+            --function-name smart-report-pdf \
+            --zip-file fileb://./dist.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
